@@ -168,12 +168,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 
   // Return profile, raw profile and auth provider details
   return {
-    profile: {
-      name: profile.name,
-      email: profile.email ? profile.email.toLowerCase() : null,
-      image: profile.image,
-      raw:  profileData
-    },
+    profile,
     account: {
       provider: provider.id,
       type: provider.type,
