@@ -1,11 +1,13 @@
 export class User {
-  constructor (name, email, image, emailVerified) {
-    if (name) { this.name = name }
-    if (email) { this.email = email }
-    if (image) { this.image = image }
-    if (emailVerified) {
-      const currentDate = new Date()
-      this.emailVerified = currentDate
+  constructor (profile) {
+    if (profile) {
+      if (profile.name) { this.name = profile.name }
+      if (profile.email) { this.email = profile.email }
+      if (profile.image) { this.image = profile.image }
+      if (profile.emailVerified) {
+        const currentDate = new Date()
+        this.emailVerified = currentDate
+      }
     }
   }
 }

@@ -171,7 +171,8 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     profile: {
       name: profile.name,
       email: profile.email ? profile.email.toLowerCase() : null,
-      image: profile.image
+      image: profile.image,
+      raw:  profileData
     },
     account: {
       provider: provider.id,
