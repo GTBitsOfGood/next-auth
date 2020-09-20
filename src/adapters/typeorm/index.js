@@ -176,6 +176,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debug('UPDATE_USER', user)
+      user[idKey] = user.id;
       return manager.save(User, user)
     }
 

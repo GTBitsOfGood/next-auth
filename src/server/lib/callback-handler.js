@@ -85,7 +85,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
         // Update emailVerified property on the user object
         const currentDate = new Date()
-        user = await updateUserAndDispatchEvent(updateUser, events, { ...profile, emailVerified: currentDate }, userByEmail)
+        user = await updateUserAndDispatchEvent(updateUser, events, { ...profile, emailVerified: currentDate }, userByEmail.id)
       } else {
         // Create user account if there isn't one for the email address already
         const currentDate = new Date()
@@ -113,7 +113,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // string and the other might be an ObjectID and would otherwise fail.
           if (`${userByProviderAccountId.id}` === `${user.id}`) {
             // in case the user's information has updated
-            user = await updateUserAndDispatchEvent(updateUser, events, profile, userByProviderAccountId)
+            user = await updateUserAndDispatchEvent(updateUser, events, profile, user.id)
             return {
               session,
               user,
@@ -129,7 +129,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
           session = useJwtSession ? {} : await createSession(userByProviderAccountId)
-          user = await updateUserAndDispatchEvent(updateUser, events, profile, userByProviderAccountId)
+          user = await updateUserAndDispatchEvent(updateUser, events, profile, userByProviderAccountId.id)
           return {
             session,
             user,
@@ -149,7 +149,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessToken,
             providerAccount.accessTokenExpires
           )
-          user = await updateUserAndDispatchEvent(updateUser, events, profile, user)
+          user = await updateUserAndDispatchEvent(updateUser, events, profile, userByProviderAccountId.id)
           await dispatchEvent(events.linkAccount, { user, providerAccount })
           // As they are already signed in, we don't need to do anything after linking them
           return {
@@ -230,8 +230,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
    * @param profile - the profile of the user
    * @param originalUser - the original user (because TypeORM complet
    */
-  async function updateUserAndDispatchEvent(updateUserFunction, events, profile, originalUser) {
-    const user = await updateUserFunction({ ...originalUser, ...profile })
+  async function updateUserAndDispatchEvent(updateUserFunction, events, profile, userId) {
+    const user = await updateUserFunction({ ...profile, id: userId  })
     await dispatchEvent(events.updateUser, user)
     return user;
   }
